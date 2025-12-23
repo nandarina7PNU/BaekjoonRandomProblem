@@ -3,14 +3,14 @@ import express from "express";
 const app = express();
 const PORT = 3000;
 
-// 티어 -> solved.ac level 범위(브5~루1: 1~30)
-const TIER_TO_LEVEL_RANGE = {
-  bronze: [1, 5],
-  silver: [6, 10],
-  gold: [11, 15],
-  platinum: [16, 20],
-  diamond: [21, 25],
-  ruby: [26, 30],
+// solved.ac 고급검색 문법: *b5..b1, *s5..s1, *g5..g1 ...
+const TIER_QUERY = {
+  bronze: "*b5..b1",
+  silver: "*s5..s1",
+  gold: "*g5..g1",
+  platinum: "*p5..p1",
+  diamond: "*d5..d1",
+  ruby: "*r5..r1",
 };
 
 // tier별 문제목록 캐시(너무 자주 호출하지 않기 위해)
@@ -22,11 +22,8 @@ function pickRandom(arr) {
 }
 
 async function fetchProblems(tier) {
-  const [minL, maxL] = TIER_TO_LEVEL_RANGE[tier];
   const size = 80;
-
-  // ✅ 핵심: tier 범위 검색 쿼리
-  const query = `level:${minL}..${maxL}`;
+  const query = TIER_QUERY[tier];
 
   const url = new URL("https://solved.ac/api/v3/search/problem");
   url.searchParams.set("query", query);
@@ -50,8 +47,8 @@ async function fetchProblems(tier) {
 app.get("/api/random", async (req, res) => {
   try {
     const tier = String(req.query.tier || "").toLowerCase();
-    if (!TIER_TO_LEVEL_RANGE[tier]) {
-      return res.status(400).json({ error: "tier invalid" });
+    if (!TIER_QUERY[tier]) {
+    return res.status(400).json({ error: "tier invalid" });
     }
 
     const now = Date.now();
