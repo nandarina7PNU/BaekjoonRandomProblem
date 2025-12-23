@@ -2,10 +2,8 @@ import { useState } from "react";
 import "./App.css";
 
 export default function App() {
-  const [tier, setTier] = useState("silver");
-  const [result, setResult] = useState({
-    url: "https://www.acmicpc.net/problem/1002",
-  });
+  const [tier, setTier] = useState("gold");
+  const [result, setResult] = useState(null); // ✅ 처음엔 비어있게
   const [loading, setLoading] = useState(false);
 
   async function drawProblem() {
@@ -14,7 +12,7 @@ export default function App() {
       const res = await fetch(`/api/random?tier=${tier}`);
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error || "failed");
-      setResult(data); // {problemId,title,url}
+      setResult(data); // {problemId, title, url}
     } catch (e) {
       alert(e.message);
     } finally {
@@ -24,9 +22,9 @@ export default function App() {
 
   return (
     <div className="page">
-      <h1 className="title">백준 티어별 무작위 문제 뽑기</h1>
+      <div className="container">
+        <h1 className="title">백준 티어별 무작위 문제 뽑기</h1>
 
-      <div className="center">
         <div className="controls">
           <button className="btn-draw" onClick={drawProblem} disabled={loading}>
             {loading ? "뽑는 중..." : "문제 뽑기"}
@@ -49,23 +47,25 @@ export default function App() {
           </div>
         </div>
 
-        <div className="result">
-          <div className="result-row">
-            <div className="pill">문제 링크</div>
+        {/* ✅ 문제 뽑기 전에는 아예 안 보이게 */}
+        {result && (
+          <div className="result">
+            <div className="result-row">
+              <div className="pill">문제 링크</div>
 
-            <a
-              className="link-box"
-              href={result?.url}
-              target="_blank"
-              rel="noreferrer"
-              title="백준 문제 열기"
-            >
-              {result?.url}
-            </a>
+              <a
+                className="link-box"
+                href={result.url}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {result.url}
+              </a>
+            </div>
+
+            <div className="hint">누르면 해당 링크로 이동합니다!</div>
           </div>
-
-          <div className="hint">누르면 해당 링크로 이동합니다!</div>
-        </div>
+        )}
       </div>
     </div>
   );

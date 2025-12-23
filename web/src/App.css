@@ -1,46 +1,54 @@
-/* 전체 레이아웃 */
 .page {
   min-height: 100vh;
   background: #ffffff;
   color: #111;
   font-family: system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans KR",
     sans-serif;
+
+  /* ✅ 전체를 중앙에 모으기 */
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
 }
 
-/* 큰 제목 */
+.container {
+  width: 980px;              /* ✅ 가운데에 “덩어리”로 모이게 */
+  padding: 80px 20px 120px;
+}
+
 .title {
   text-align: center;
   font-size: 56px;
   font-weight: 800;
-  margin: 80px 0 0;
+  margin: 0;
   letter-spacing: -1px;
 }
 
-/* 중앙 정렬 영역 */
-.center {
+/* ✅ 버튼 + 드롭다운 정렬 균형 */
+.controls {
   margin-top: 110px;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 28px;
-}
-
-/* 버튼 + 드롭다운 가로 배치 */
-.controls {
-  display: flex;
-  align-items: center;
+  justify-content: center;
   gap: 26px;
+
+  /* 버튼과 select가 아래 라인 기준으로 맞춰져서 “묘한 불균형” 해결 */
+  align-items: flex-end;
 }
 
-/* 버튼 */
+/* ✅ 버튼을 확실한 녹색으로 */
 .btn-draw {
   padding: 14px 34px;
   border-radius: 14px;
-  border: 2px solid #12c25f; /* 피그마에서 녹색 느낌 */
+
+  border: 2px solid #00c853;   /* 진짜 녹색 */
+  color: #00c853;              /* 글자도 녹색 */
   background: #fff;
+
   font-size: 18px;
-  font-weight: 700;
+  font-weight: 800;
   cursor: pointer;
+  line-height: 1;
+  height: 52px;                /* ✅ select 높이와 맞추기 */
 }
 
 .btn-draw:disabled {
@@ -52,7 +60,7 @@
   transform: translateY(-1px);
 }
 
-/* 드롭다운 영역 */
+/* 드롭다운 */
 .select-col {
   display: flex;
   flex-direction: column;
@@ -61,13 +69,14 @@
 
 .select-label {
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 800;
   text-align: left;
 }
 
 .select {
-  width: 340px;
-  padding: 14px 16px;
+  width: 360px;
+  height: 52px;                /* ✅ 버튼과 높이 맞춤 */
+  padding: 0 16px;
   font-size: 18px;
   border-radius: 14px;
   border: 2px solid #111;
@@ -76,32 +85,29 @@
 
 /* 결과 영역 */
 .result {
-  margin-top: 6px;
+  margin-top: 38px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 12px;
 }
 
-/* "문제 링크" + 링크박스 한 줄 */
 .result-row {
   display: flex;
   align-items: center;
   gap: 14px;
 }
 
-/* "문제 링크" pill */
 .pill {
   padding: 12px 22px;
   border-radius: 14px;
-  border: 2px solid #00b6ff; /* 파란 테두리 느낌 */
+  border: 2px solid #00b6ff;
   color: #00b6ff;
   font-weight: 800;
   font-size: 18px;
   background: #fff;
 }
 
-/* 링크 박스 */
 .link-box {
   display: inline-block;
   padding: 12px 22px;
@@ -121,7 +127,6 @@
   background: rgba(0, 182, 255, 0.08);
 }
 
-/* 작은 안내문 */
 .hint {
   font-size: 14px;
   color: #9aa0a6;
