@@ -3,6 +3,15 @@ import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
 
+import cors from "cors";
+
+app.use(cors({
+  origin: [
+    "https://nandarina7.cafe24.com",
+    "http://nandarina7.cafe24.com"
+  ]
+}));
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -47,6 +56,9 @@ async function fetchProblems(tier) {
   const data = await res.json();
   return data.items ?? [];
 }
+
+const API_BASE = "https://baekjoon-random-api.onrender.com"; // 너 Render 주소
+const res = await fetch(`${API_BASE}/api/random?tier=${tier}`);
 
 // API: /api/random?tier=gold
 app.get("/api/random", async (req, res) => {
