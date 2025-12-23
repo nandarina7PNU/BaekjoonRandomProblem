@@ -9,17 +9,49 @@ export default function App() {
   async function drawProblem() {
     setLoading(true);
     try {
-      const res = await fetch(`/api/random?tier=${tier}`);
+      // 티어별 solved.ac 검색쿼리
+      const TIER_QUERY = {
+        bronze: "*b5..b1",
+        silver: "*s5..s1",
+        gold: "*g5..g1",
+        platinum: "*p5..p1",
+        diamond: "*d5..d1",
+        ruby: "*r5..r1",
+      };
+
+      const query = TIER_QUERY[tier];
+      const url = new URL("https://solved.ac/api/v3/search/problem");
+      url.searchParams.set("query", query);
+      url.searchParams.set("page", "1");
+      url.searchParams.set("size", "80");
+
+      const res = await fetch(url.toString(), {
+        headers: {
+          // solved.ac가 User-Agent 필요할 때 대비
+          "User-Agent": "baekjoon-random/1.0",
+        },
+      });
+
+      if (!res.ok) throw new Error("solved.ac 요청 실패");
       const data = await res.json();
-      if (!res.ok) throw new Error(data?.error || "failed");
-      setResult(data); // {problemId, title, url}
+
+      const items = data.items ?? [];
+      if (items.length === 0) throw new Error("해당 티어 문제를 찾지 못했어요");
+
+      const pick = items[Math.floor(Math.random() * items.length)];
+      const problemId = pick.problemId;
+
+      setResult({
+        problemId,
+        url: `https://www.acmicpc.net/problem/${problemId}`,
+      });
     } catch (e) {
       alert(e.message);
     } finally {
       setLoading(false);
     }
   }
-
+  
   return (
     <div className="page">
       <div className="container">

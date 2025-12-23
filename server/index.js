@@ -1,7 +1,12 @@
 import express from "express";
 
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const app = express();
-const PORT = 3000;
 
 // solved.ac 고급검색 문법: *b5..b1, *s5..s1, *g5..g1 ...
 const TIER_QUERY = {
@@ -78,6 +83,13 @@ app.get("/api/random", async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`API Server: http://localhost:${PORT}`);
+// ✅ React build 결과 서빙
+app.use(express.static(path.join(__dirname, "../web/dist")));
+
+// SPA 대응 (새로고침해도 index.html)
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../web/dist/index.html"));
 });
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log("listening", PORT));
