@@ -6,7 +6,7 @@ export default function App() {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const API_BASE = "https://baekjoon-random-api.onrender.com";
+  const API_BASE = "https://baekjoonrandomproblem.onrender.com";
 
   async function drawProblem() {
     setLoading(true);
