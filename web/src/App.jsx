@@ -3,55 +3,35 @@ import "./App.css";
 
 export default function App() {
   const [tier, setTier] = useState("gold");
-  const [result, setResult] = useState(null); // ✅ 처음엔 비어있게
+  const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  const API_BASE = "https://baekjoon-random-api.onrender.com";
 
   async function drawProblem() {
     setLoading(true);
     try {
-      // 티어별 solved.ac 검색쿼리
-      const TIER_QUERY = {
-        bronze: "*b5..b1",
-        silver: "*s5..s1",
-        gold: "*g5..g1",
-        platinum: "*p5..p1",
-        diamond: "*d5..d1",
-        ruby: "*r5..r1",
-      };
+      const res = await fetch(`${API_BASE}/api/random?tier=${tier}`);
 
-      const query = TIER_QUERY[tier];
-      const url = new URL("https://solved.ac/api/v3/search/problem");
-      url.searchParams.set("query", query);
-      url.searchParams.set("page", "1");
-      url.searchParams.set("size", "80");
+      // 서버가 에러를 JSON으로 줄 수도 있어서 처리
+      const data = await res.json().catch(() => null);
 
-      const res = await fetch(url.toString(), {
-        headers: {
-          // solved.ac가 User-Agent 필요할 때 대비
-          "User-Agent": "baekjoon-random/1.0",
-        },
-      });
-
-      if (!res.ok) throw new Error("solved.ac 요청 실패");
-      const data = await res.json();
-
-      const items = data.items ?? [];
-      if (items.length === 0) throw new Error("해당 티어 문제를 찾지 못했어요");
-
-      const pick = items[Math.floor(Math.random() * items.length)];
-      const problemId = pick.problemId;
+      if (!res.ok) {
+        const msg = data?.error || `요청 실패 (status ${res.status})`;
+        throw new Error(msg);
+      }
 
       setResult({
-        problemId,
-        url: `https://www.acmicpc.net/problem/${problemId}`,
+        problemId: data.problemId,
+        url: data.url,
       });
     } catch (e) {
-      alert(e.message);
+      alert(e.message || "Failed to fetch");
     } finally {
       setLoading(false);
     }
   }
-  
+
   return (
     <div className="page">
       <div className="container">
@@ -79,12 +59,10 @@ export default function App() {
           </div>
         </div>
 
-        {/* ✅ 문제 뽑기 전에는 아예 안 보이게 */}
         {result && (
           <div className="result">
             <div className="result-row">
               <div className="pill">문제 링크</div>
-
               <a
                 className="link-box"
                 href={result.url}
@@ -94,7 +72,6 @@ export default function App() {
                 {result.url}
               </a>
             </div>
-
             <div className="hint">누르면 해당 링크로 이동합니다!</div>
           </div>
         )}

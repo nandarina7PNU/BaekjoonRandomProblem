@@ -1,21 +1,19 @@
 import express from "express";
-
+import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
-
-import cors from "cors";
-
-app.use(cors({
-  origin: [
-    "https://nandarina7.cafe24.com",
-    "http://nandarina7.cafe24.com"
-  ]
-}));
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
+
+// ✅ CORS: 카페24에서 오는 요청 허용
+app.use(
+  cors({
+    origin: ["https://nandarina7.cafe24.com", "http://nandarina7.cafe24.com"],
+  })
+);
 
 // solved.ac 고급검색 문법: *b5..b1, *s5..s1, *g5..g1 ...
 const TIER_QUERY = {
@@ -57,15 +55,13 @@ async function fetchProblems(tier) {
   return data.items ?? [];
 }
 
-const API_BASE = "https://baekjoon-random-api.onrender.com"; // 너 Render 주소
-const res = await fetch(`${API_BASE}/api/random?tier=${tier}`);
-
-// API: /api/random?tier=gold
+// ✅ API: /api/random?tier=gold
 app.get("/api/random", async (req, res) => {
   try {
     const tier = String(req.query.tier || "").toLowerCase();
+
     if (!TIER_QUERY[tier]) {
-    return res.status(400).json({ error: "tier invalid" });
+      return res.status(400).json({ error: "tier invalid" });
     }
 
     const now = Date.now();
@@ -85,23 +81,20 @@ app.get("/api/random", async (req, res) => {
 
     const p = pickRandom(items);
 
-    res.json({
+    return res.json({
       problemId: p.problemId,
       title: p.titleKo ?? p.title ?? "",
       url: `https://www.acmicpc.net/problem/${p.problemId}`,
     });
   } catch (e) {
-    res.status(500).json({ error: e.message || "server error" });
+    return res.status(500).json({ error: e.message || "server error" });
   }
 });
 
-// ✅ React build 결과 서빙
-app.use(express.static(path.join(__dirname, "../web/dist")));
-
-// SPA 대응 (새로고침해도 index.html)
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../web/dist/index.html"));
+app.get("/", (req, res) => {
+  res.send("API server is running");
 });
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log("listening", PORT));
