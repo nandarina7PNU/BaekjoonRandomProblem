@@ -1,42 +1,128 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+/* 전체 레이아웃 */
+.page {
+  min-height: 100vh;
+  background: #ffffff;
+  color: #111;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans KR",
+    sans-serif;
+}
+
+/* 큰 제목 */
+.title {
   text-align: center;
+  font-size: 56px;
+  font-weight: 800;
+  margin: 80px 0 0;
+  letter-spacing: -1px;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* 중앙 정렬 영역 */
+.center {
+  margin-top: 110px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* 버튼 + 드롭다운 가로 배치 */
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 26px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+/* 버튼 */
+.btn-draw {
+  padding: 14px 34px;
+  border-radius: 14px;
+  border: 2px solid #12c25f; /* 피그마에서 녹색 느낌 */
+  background: #fff;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
 }
 
-.card {
-  padding: 2em;
+.btn-draw:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
-.read-the-docs {
-  color: #888;
+.btn-draw:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+/* 드롭다운 영역 */
+.select-col {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.select-label {
+  font-size: 16px;
+  font-weight: 700;
+  text-align: left;
+}
+
+.select {
+  width: 340px;
+  padding: 14px 16px;
+  font-size: 18px;
+  border-radius: 14px;
+  border: 2px solid #111;
+  outline: none;
+}
+
+/* 결과 영역 */
+.result {
+  margin-top: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+/* "문제 링크" + 링크박스 한 줄 */
+.result-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* "문제 링크" pill */
+.pill {
+  padding: 12px 22px;
+  border-radius: 14px;
+  border: 2px solid #00b6ff; /* 파란 테두리 느낌 */
+  color: #00b6ff;
+  font-weight: 800;
+  font-size: 18px;
+  background: #fff;
+}
+
+/* 링크 박스 */
+.link-box {
+  display: inline-block;
+  padding: 12px 22px;
+  border-radius: 14px;
+  border: 2px solid #00b6ff;
+  color: #00b6ff;
+  font-weight: 700;
+  font-size: 18px;
+  text-decoration: none;
+  max-width: 620px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.link-box:hover {
+  background: rgba(0, 182, 255, 0.08);
+}
+
+/* 작은 안내문 */
+.hint {
+  font-size: 14px;
+  color: #9aa0a6;
 }
